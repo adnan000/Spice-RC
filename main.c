@@ -38,6 +38,14 @@ int V_DC_node();
 
 int I_DC_branch();
 
-void printCSV();
+void printCSV(){
+   FILE * fp;
+
+   fp = fopen ("hasil.csv", "w+");
+   //fprintf(fp, "%d,%d",V,I);
+   
+   fclose(fp);
+}
+    
 
 void printGraph();
