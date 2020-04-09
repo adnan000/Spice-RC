@@ -28,6 +28,8 @@ int main(){
         printf("koneksi : ");
         scanf(" %d %d", &arr_c[i].con1, &arr_c[i].con2);
     }
+    
+/*Saran aja yaa ini bentuk main sama structnya*/
 
 
 int* netlistToMatrix(char *netlist);
