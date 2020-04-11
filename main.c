@@ -34,10 +34,6 @@ int main(){
 
 int* netlistToMatrix(char *netlist);
 
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-
 
 int v_dc_node(double Vs, double C, double R, double V_awal, double t_akhir){
 
