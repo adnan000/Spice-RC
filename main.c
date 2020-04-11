@@ -35,23 +35,24 @@ int main(){
 int* netlistToMatrix(char *netlist);
 
 
-int v_dc_node(double Vs, double C, double R, double V_awal, double t_akhir){
+/*Fungsi ini sudah termasuk menghitung arus branch dan tegangan node*/
+int dc(double Vs, double C, double R, double V_awal, double t_akhir){
 
     FILE *v_dc;
 
-    v_dc = fopen("v_dc_node.csv", "w");
+    v_dc = fopen("v_dc_c.csv", "w");
 
-    double V_C, V_R, Vbefore, t=0, delt = 0.001;
+    double V_C, V_R, I_R=Vs/R, I_C=Vs/R, Vbefore, t=0, delt = 0.001;
     
     Vbefore = V_awal;
-    printf("%lf\n", Vbefore);
-    fprintf (v_dc, "%f,%f,%f\n", Vbefore, Vs, t);
+    fprintf (v_dc, "%lf,%lf,%lf,%lf,%lf\n", Vbefore, Vs, I_C, I_R, t);
     for (t = 0; t <= t_akhir ; t += delt){
         V_C = (Vs*(delt)+(R*C*Vbefore))/((R*C) + delt);
+        I_C = C*(V_C-Vbefore)/delt;
         Vbefore = V_C;
         V_R = Vs-Vbefore;
-        printf("%lf,%lf\n", V_C, V_R);
-        fprintf (v_dc, "%f,%f,%f\n", V_C, V_R, t);
+        I_R = V_R/R;
+        fprintf (v_dc, "%lf,%lf,%lf,%lf,%lf\n", V_C, V_R, I_C, I_R, t);
     }
 
     fclose(v_dc);
