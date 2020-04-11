@@ -34,8 +34,35 @@ int main(){
 
 int* netlistToMatrix(char *netlist);
 
-int V_DC_node(); 
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
 
+
+int v_dc_node(double Vs, double C, double R, double V_awal, double t_akhir){
+
+    FILE *v_dc;
+
+    v_dc = fopen("v_dc_node.csv", "w");
+
+    double V_C, V_R, Vbefore, t=0, delt = 0.001;
+    
+    Vbefore = V_awal;
+    printf("%lf\n", Vbefore);
+    fprintf (v_dc, "%f,%f,%f\n", Vbefore, Vs, t);
+    for (t = 0; t <= t_akhir ; t += delt){
+        V_C = (Vs*(delt)+(R*C*Vbefore))/((R*C) + delt);
+        Vbefore = V_C;
+        V_R = Vs-Vbefore;
+        printf("%lf,%lf\n", V_C, V_R);
+        fprintf (v_dc, "%f,%f,%f\n", V_C, V_R, t);
+    }
+
+    fclose(v_dc);
+
+    return(0);
+}
+    
 int I_DC_branch();
 
 void printCSV(){
