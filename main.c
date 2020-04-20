@@ -28,7 +28,7 @@ int main(){
         printf("koneksi : ");
         scanf(" %d %d", &arr_c[i].con1, &arr_c[i].con2);
     }
-    
+}
 /*Saran aja yaa ini bentuk main sama structnya*/
 
 
@@ -61,15 +61,5 @@ int dc(double Vs, double C, double R, double V_awal, double t_akhir){
 }
     
 int I_DC_branch();
-
-void printCSV(){
-   FILE * fp;
-
-   fp = fopen ("hasil.csv", "w+");
-   //fprintf(fp, "%d,%d",V,I);
-   
-   fclose(fp);
-}
     
-
 void printGraph();

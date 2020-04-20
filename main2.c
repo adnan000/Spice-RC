@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "koolplot.h"
 
 #define M_PI 3.14159265358979323846
 
@@ -32,7 +33,7 @@ void PrintPhasor(kompleks_t kompleks, int freq);
 
 
 int main(){
-    float R,L,C,t_akhir,V_awal;
+    float R,L,C,t_akhir,V_awal,XC,XL;
     int frequency,Vmag,pilihan;
 
 	printf("Masukkan nilai resistansi (Ohm) : "); scanf("%f", &R);
@@ -51,13 +52,38 @@ int main(){
 
     if (pilihan==1){
         printf("Masukkan frekuensi (rad/s) : "); scanf("%d", &frequency);
+		printf("Pilih grafik yang ingin ditampilkan:\n1.Tegangan Induktor\n2.Arus\n"); scanf("%d", &pilihan);
         system("@cls||clear");
         ac(R,L,C,Vmag,t_akhir,frequency);
+		XC=1/(2*M_PI*frequency*C);
+		XL=2*M_PI*frequency*L;
+		if(pilihan==1){
+			plotdata t(0.0, t_akhir*1000);    
+			plotdata V = fabs(cos(frequency*t));
+			plot(t, V);
+		}
+		if(pilihan==2){
+			plotdata t(0.0, t_akhir*1000);    
+			plotdata I = fabs(cos(frequency*t));
+			plot(t, I);
+			pilihan=0;
+		}
     }
     if (pilihan==2){
 	    printf("Masukkan nilai tegangan saat t<0 (V) : "); scanf("%f", &V_awal);
+		printf("Pilih grafik yang ingin ditampilkan:\n1.Tegangan Kapasitor\n2.Arus\n"); scanf("%d", &pilihan);
         system("@cls||clear");
         dc(Vmag, C, R, V_awal, t_akhir);
+		if(pilihan==1){
+			plotdata t(0.0, t_akhir*1000);    
+			plotdata V = fabs(V_awal+(Vmag-V_awal)*(1-exp(-t/(R*C))));
+			plot(t, V);
+		}
+		if(pilihan==2){
+			plotdata t(0.0, t_akhir*1000);    
+			plotdata I = fabs((Vmag-V_awal)*(exp(-t/(R*C)))/R);
+			plot(t, I);
+		}
     }
 }
 
@@ -227,3 +253,4 @@ int dc(int Vs, float C, float R, float V_awal, float t_akhir){
 
     return(0);
 }
+
