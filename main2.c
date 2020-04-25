@@ -35,7 +35,11 @@ void PrintPhasor(kompleks_t kompleks, int freq);
 int main(){
     float R,L,C,t_akhir,V_awal,XC,XL;
     int frequency,Vmag,pilihan;
-
+	printf("  .--R--L--C--.\n");
+	printf("  |+          |\n");
+	printf("  V           |\n");
+	printf("  |-          |\n");
+	printf("  '-----------'\n\n");
 	printf("Masukkan nilai resistansi (Ohm) : "); scanf("%f", &R);
 	printf("Masukkan nilai induktansi (H) : "); scanf("%f", &L);
 	printf("Masukkan nilai kapasitansi (C) : "); scanf("%f", &C);	
@@ -52,22 +56,10 @@ int main(){
 
     if (pilihan==1){
         printf("Masukkan frekuensi (rad/s) : "); scanf("%d", &frequency);
-		printf("Pilih grafik yang ingin ditampilkan:\n1.Tegangan Induktor\n2.Arus\n"); scanf("%d", &pilihan);
-        system("@cls||clear");
+		system("@cls||clear");
         ac(R,L,C,Vmag,t_akhir,frequency);
 		XC=1/(2*M_PI*frequency*C);
 		XL=2*M_PI*frequency*L;
-		if(pilihan==1){
-			plotdata t(0.0, t_akhir*1000);    
-			plotdata V = fabs(cos(frequency*t));
-			plot(t, V);
-		}
-		if(pilihan==2){
-			plotdata t(0.0, t_akhir*1000);    
-			plotdata I = fabs(cos(frequency*t));
-			plot(t, I);
-			pilihan=0;
-		}
     }
     if (pilihan==2){
 	    printf("Masukkan nilai tegangan saat t<0 (V) : "); scanf("%f", &V_awal);
@@ -76,7 +68,7 @@ int main(){
         dc(Vmag, C, R, V_awal, t_akhir);
 		if(pilihan==1){
 			plotdata t(0.0, t_akhir*1000);    
-			plotdata V = fabs(V_awal+(Vmag-V_awal)*(1-exp(-t/(R*C))));
+			plotdata V = V_awal+fabs((Vmag-V_awal)*(1-exp(-t/(R*C))));
 			plot(t, V);
 		}
 		if(pilihan==2){
@@ -126,6 +118,21 @@ int ac(float R, float L, float C, int Vmag, float t_akhir, int frequency){
 	
 	
 	fclose(v_ac);
+		int pil;
+		printf("Pilih grafik yang ingin ditampilkan:\n1.Tegangan Induktor\n2.Arus\n"); scanf("%d", &pil);
+        
+		if(pil==1){
+			plotdata t(0.0, t_akhir*1000);    
+			plotdata V = VL.mag*cos((frequency*t)+(M_PI/180)*(VL.angle));
+			plot(t, V);
+		}
+		if(pil==2){
+			float x=I.mag;
+			float y=I.angle;
+			plotdata t(0.0, t_akhir*1000);    
+			plotdata I = x*cos((frequency*t)+(M_PI/180)*(y));
+			plot(t, I);
+		}
 	return 0;
 }
 
