@@ -295,7 +295,7 @@ float underDamped(float R, float L, float C, float Vf, float Vi, float tf, float
 	fclose(v_dc);
 
 	plotdata t_axis(0.0, tf);    
-	plotdata V = (Vf - (Vf - Vi)*(exp(s*t_axis)*(cos(w*t_axis) - (s/w)*sin(w*t_axis))));
+	plotdata V = fabs(Vf - (Vf - Vi)*(exp(s*t_axis)*(cos(w*t_axis) - (s/w)*sin(w*t_axis))));
 	plot(t_axis, V);
 
 return Vc;
