@@ -16,7 +16,7 @@ typedef struct{
 	float arus;
 } freqresponse_t;
 
-int dc(int Vs, float C, float R, float V_awal, float t_akhir);
+int dc(int Vs, float C, float R, float L, float V_awal, float t_akhir);
 int ac(float R, float L, float C, int Vmag, float t_akhir, int frequency);
 
 float Magnitude(float real, float imag);
@@ -31,9 +31,12 @@ void CalculateVoltage(float R, float L, float C, int freq, kompleks_t I, komplek
 void PrintComplex(kompleks_t kompleks);
 void PrintPhasor(kompleks_t kompleks, int freq);
 
+float overDamped(float R, float L, float C, float Vf, float Vi, float tf, float T);
+float underDamped(float R, float L, float C, float Vf, float Vi, float tf, float T);
+float criticallyDamped(float R, float L, float C, float Vf, float tf, float T);
 
 int main(){
-    float R,L,C,t_akhir,V_awal,XC,XL;
+    float R,L,C,t_akhir,V_awal;
     int frequency,Vmag,pilihan;
 	printf("\t  .--R--L--C--.\n");
 	printf("\t  |+          |\n");
@@ -45,7 +48,7 @@ int main(){
 	printf("Masukkan nilai kapasitansi (C) : "); scanf("%f", &C);	
 	
 	printf("Masukkan nilai tegangan sumber (V) : "); scanf("%d", &Vmag);
-	printf("Masukkan waktu pengamatan (s) : "); scanf("%f", &t_akhir);
+	printf("Masukkan waktu pengamatan (ms) : "); scanf("%f", &t_akhir);
 
     system("@cls||clear");
 	
@@ -58,8 +61,6 @@ int main(){
         printf("Masukkan frekuensi (rad/s) : "); scanf("%d", &frequency);
 		system("@cls||clear");
         ac(R,L,C,Vmag,t_akhir,frequency);
-		XC=1/(2*M_PI*frequency*C);
-		XL=2*M_PI*frequency*L;
     }
     if (pilihan==2){
 	    printf("Masukkan nilai tegangan saat t<0 (V) : "); scanf("%f", &V_awal);
@@ -112,14 +113,14 @@ int ac(float R, float L, float C, int Vmag, float t_akhir, int frequency){
 		printf("Pilih grafik yang ingin ditampilkan:\n1.Tegangan Induktor\n2.Arus\n"); scanf("%d", &pil);
         
 		if(pil==1){
-			plotdata t(0.0, t_akhir*1000);    
+			plotdata t(0.0, t_akhir);    
 			plotdata V = VL.mag*cos((frequency*t)+(M_PI/180)*(VL.angle));
 			plot(t, V);
 		}
 		if(pil==2){
 			float x=I.mag;
 			float y=I.angle;
-			plotdata t(0.0, t_akhir*1000);    
+			plotdata t(0.0, t_akhir);    
 			plotdata I = x*cos((frequency*t)+(M_PI/180)*(y));
 			plot(t, I);
 		}
@@ -245,7 +246,7 @@ int dc(int Vs, float C, float R, float L, float V_awal, float t_akhir){
         condition = 3;
     }
 
-	printf("Masukkan DC sweeping time (s) : "); scanf("%f", &T);
+	printf("Masukkan DC sweeping time (ms) : "); scanf("%f", &T);
     
 	if(condition == 1){underDamped(R,L,C,Vs,V_awal,t_akhir,T);}
     if(condition == 2){overDamped(R,L,C,Vs,V_awal,t_akhir,T);}
@@ -270,9 +271,9 @@ float overDamped(float R, float L, float C, float Vf, float Vi, float tf, float 
 
 	fclose(v_dc);
 
-	plotdata t(0.0, tf*1000);    
-	plotdata V = (Vf - Vi)*(exp(s1*t)/(s1/s2 - 1) + exp(s2*t)/(s2/s1 - 1)) + Vf;
-	plot(t, V);
+	plotdata t_axis(0.0, tf);    
+	plotdata V = (Vf - Vi)*(exp(s1*t_axis)/(s1/s2 - 1) + exp(s2*t_axis)/(s2/s1 - 1)) + Vf;
+	plot(t_axis, V);
 
 return Vc;
 }
@@ -293,9 +294,9 @@ float underDamped(float R, float L, float C, float Vf, float Vi, float tf, float
 
 	fclose(v_dc);
 
-	plotdata t(0.0, tf*1000);    
-	plotdata V = (Vf - (Vf - Vi)*(exp(s*t)*(cos(w*t) - (s/w)*sin(w*t))));
-	plot(t, V);
+	plotdata t_axis(0.0, tf);    
+	plotdata V = (Vf - (Vf - Vi)*(exp(s*t_axis)*(cos(w*t_axis) - (s/w)*sin(w*t_axis))));
+	plot(t_axis, V);
 
 return Vc;
 }
@@ -313,9 +314,10 @@ float criticallyDamped(float R, float L, float C, float Vf, float tf, float T){
 
 	fclose(v_dc);
 
-	plotdata t(0.0, tf*1000);    
-	plotdata V = (C*exp(-t/(2*L/R)) + Vf);
-	plot(t, V);
+	plotdata t_axis(0.0, tf);    
+	plotdata V = (C*exp(-t_axis/(2*L/R)) + Vf);
+	plot(t_axis, V);
 
-return Vc;
+	return Vc;
 }
+
