@@ -35,13 +35,15 @@ int main(){
     printf("Masukkan nilai V awal (V) : "); scanf("%f", &Vi);
     printf("\n");
 
-    if (R/2*L > 1/sqrt(L*C)){
+    if (R/(2*L) > 1/sqrt(L*C)){
         printf("**Case Underdamped**  \n\n");
         condition = 1;
-    }else if (R/2*L < 1/sqrt(L*C)){
+    }
+    if (R/(2*L) < 1/sqrt(L*C)){
         printf("**Case Overdamped**  \n\n");
         condition = 2;
-    }else if(R/2*L == 1/sqrt(L*C)){
+    }
+    if(R/(2*L) == 1/sqrt(L*C)){
         printf("**Case Criticallydamped**  \n\n");
         condition = 3;
     }
