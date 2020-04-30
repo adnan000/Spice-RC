@@ -233,11 +233,11 @@ int dc(int Vs, float C, float R, float L, float V_awal, float t_akhir){
 	int condition;
 	float T, Vc;
 
-	if (R/(2*L) > 1/sqrt(L*C)){
+	if (R/(2*L) < 1/sqrt(L*C)){
         printf("**Case Underdamped**  \n\n");
         condition = 1;
     }
-    if (R/(2*L) < 1/sqrt(L*C)){
+    if (R/(2*L) > 1/sqrt(L*C)){
         printf("**Case Overdamped**  \n\n");
         condition = 2;
     }
