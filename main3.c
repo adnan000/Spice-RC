@@ -8,7 +8,6 @@
 typedef struct{
 	float real,imag;
 	float mag,angle;
-	// Silakan tambahkan
 } kompleks_t;
 
 typedef struct{
