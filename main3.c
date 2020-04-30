@@ -231,19 +231,22 @@ void PrintPhasor(kompleks_t kompleks, int freq){
 int dc(int Vs, float C, float R, float L, float V_awal, float t_akhir){
 
 	int condition;
-	float T, Vc;
-
-	if (R/(2*L) < 1/sqrt(L*C)){
+	float T, Vc, a, b;
+	
+	a=R/(2*L);
+	b=1/sqrt(L*C);
+    
+	if (a == b){
+        printf("**Case Criticallydamped**  \n\n");
+        condition = 3;
+    }
+	if (a < b){
         printf("**Case Underdamped**  \n\n");
         condition = 1;
     }
-    if (R/(2*L) > 1/sqrt(L*C)){
+    if (a > b){
         printf("**Case Overdamped**  \n\n");
         condition = 2;
-    }
-    if(R/(2*L) == 1/sqrt(L*C)){
-        printf("**Case Criticallydamped**  \n\n");
-        condition = 3;
     }
 
 	printf("Masukkan DC sweeping time (ms) : "); scanf("%f", &T);
@@ -315,7 +318,7 @@ float criticallyDamped(float R, float L, float C, float Vf, float tf, float T){
 	fclose(v_dc);
 
 	plotdata t_axis(0.0, tf);    
-	plotdata V = (C*exp(-t_axis/(2*L/R)) + Vf);
+	plotdata V = fabs(Vf-C*exp(-t_axis*R/(2*L)));
 	plot(t_axis, V);
 
 	return Vc;
